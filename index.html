@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>體超 SUPER HUMAN 官方網站</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- 引入 Google Fonts: 思源黑體 (Noto Sans TC) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* --- 全局響應式比例 (自動縮放排版與字體) --- */
+html { font-size: 16px; scroll-behavior: smooth; }
+@media (max-width: 1024px) { html { font-size: 15px; } }
+@media (max-width: 768px) { html { font-size: 14px; } }
+@media (max-width: 480px) { html { font-size: 13px; } }
+
+/* 全局使用思源黑體 */
+body { font-family: 'Noto Sans TC', sans-serif; }
+
+/* 隱藏滾動條但保持可滾動 */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* 頁面整體載入動畫 */
+@keyframes pageEnter {
+from { opacity: 0; transform: translateY(30px); filter: blur(5px); }
+to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.page-enter {
+animation: pageEnter 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+/* 內容階層滑入動畫 */
+@keyframes itemFadeIn {
+from { opacity: 0; transform: translateY(20px); filter: blur(3px); }
+to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.stagger-item {
+opacity: 0; 
+animation: itemFadeIn 0.8s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+/* 頁面退場動畫 */
+@keyframes pageExit {
+from { opacity: 1; transform: translateY(0); }
+to { opacity: 0; transform: translateY(-15px); }
+}
+.page-exit {
+animation: pageExit 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* --- 🌟 頂級畫冊滾動浮現動畫 (Scroll Reveal) --- */
+.reveal-element {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.2s cubic-bezier(0.19, 1, 0.22, 1), transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.reveal-element.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-left { transform: translateX(-50px); }
+.reveal-right { transform: translateX(50px); }
+.reveal-left.is-revealed, .reveal-right.is-revealed { transform: translateX(0); }
+
+/* 延遲時間設定 */
+.delay-100 { transition-delay: 100ms; animation-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; animation-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; animation-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; animation-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; animation-delay: 500ms; }
+
+/* 隱藏未啟用的頁面 */
+.page-section { display: none; }
+.page-section.active { display: block; }
+
+/* --- 🌟 頂級主標題浮現動畫 --- */
+@keyframes premiumTitleReveal {
+  0% { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(15px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+.premium-title-anim {
+  opacity: 0;
+  animation: premiumTitleReveal 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+  animation-delay: 100ms; 
+}
+
+/* --- 🌟 背景人物生命呼吸縮放 --- */
+@keyframes slowZoom {
+  0% { transform: scale(1.02); }
+  100% { transform: scale(1.12); }
+}
+.animate-bg-zoom {
+  animation: slowZoom 25s ease-in-out infinite alternate;
+}
+
+/* --- 🌟 質感電影雜訊紋理 --- */
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* --- 頂級螢光按鈕效果 (鍛造金屬光) --- */
+.neon-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  padding: 1px; 
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(230,194,128,0.6) 0%, rgba(179,133,64,0.1) 100%);
+  box-shadow: 0 10px 30px -10px rgba(230, 194, 128, 0.2);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.neon-btn-inner {
+  background: linear-gradient(135deg, #DFB973 0%, #A87B38 100%);
+  border-radius: 9999px;
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.4s ease;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.2);
+}
+.neon-btn-wrapper:hover {
+  box-shadow: 0 15px 40px -10px rgba(230, 194, 128, 0.4);
+  transform: translateY(-4px) scale(1.01);
+  padding: 2px;
+}
+.neon-btn-wrapper:hover .neon-btn-inner { 
+  background: linear-gradient(135deg, #F0D4A0 0%, #C89F5D 100%); 
+}
+
+/* --- 卡片動畫基礎設定 --- */
+.hover-glow-card {
+  transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.6s ease, border-color 0.6s ease !important;
+  position: relative;
+  z-index: 1;
+  background-color: #0A0A0A;
+}
+.hover-glow-card:hover {
+  transform: translateY(-8px) !important;
+  border-color: rgba(230, 194, 128, 0.5) !important;
+  box-shadow: 0 25px 50px -15px rgba(230, 194, 128, 0.15), 0 0 30px rgba(230, 194, 128, 0.05) !important;
+  z-index: 10;
+}
+
+/* --- 內文專屬排版 (深色模式) --- */
+.article-content p { margin-bottom: 1.75rem; line-height: 1.85; color: #A1A1AA; font-size: 1.1rem; }
+.article-content h3 { font-size: 1.5rem; font-weight: 800; color: #FFFFFF; margin-top: 2.5rem; margin-bottom: 1rem; border-left: 4px solid #E6C280; padding-left: 0.75rem; }
+.article-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.75rem; color: #A1A1AA; }
+.article-content li { margin-bottom: 0.5rem; line-height: 1.7; font-size: 1.05rem; }
+.article-content strong { color: #E6C280; font-weight: bold; }
+
+/* --- 優化行動裝置中文閱讀體驗 --- */
+p, .text-content { text-align: justify; text-justify: inter-ideograph; line-break: strict; overflow-wrap: break-word; }
+h1, h2, h3, h4, h5, h6 { word-break: keep-all; overflow-wrap: break-word; line-break: strict; }
+
+/* --- 環境光 --- */
+@keyframes fluidBlob { 0%, 100% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(20px, -30px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } }
+.animate-blob { animation: fluidBlob 8s infinite alternate ease-in-out; }
+.animation-delay-2000 { animation-delay: 2s; }
+
+/* --- 場館介紹圖文互動 --- */
+.facility-card-desc {
+  transform: translateY(15px);
+  opacity: 0.8;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-glow-card:hover .facility-card-desc {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* --- 金屬漸層字體工具類 --- */
+.text-metallic-gold {
+  background: linear-gradient(135deg, #F0D4A0 0%, #C89F5D 40%, #A87B38 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-metallic-silver {
+  background: linear-gradient(to bottom, #FFFFFF 0%, #A3A3A3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 自訂捲軸 */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #000000; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #B38540; }
+
+</style>
+</head>
+<body class="min-h-screen flex flex-col font-sans text-white selection:bg-[#B38540] selection:text-white bg-[#000000] overflow-x-hidden antialiased">
+
+<nav class="bg-[#000000]/80 backdrop-blur-xl text-white sticky top-0 z-50 border-b border-white/5 transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20 md:h-24">
+      
+      <!-- Logo 區塊 -->
+      <div class="flex items-center cursor-pointer transform hover:scale-105 transition-transform duration-500 gap-2 group" onclick="navigateTo('home')">
+        <span class="text-2xl md:text-3xl font-black tracking-widest text-metallic-silver group-hover:text-white transition-colors">體超</span>
+        <span class="text-xl md:text-2xl font-black tracking-widest text-metallic-gold ml-1">SUPER HUMAN</span>
+      </div>
+
+      <!-- 桌機版選單 -->
+      <div class="hidden md:flex items-center space-x-1 lg:space-x-3" id="desktop-menu">
+        <button onclick="navigateTo('home')" data-target="home" class="nav-btn px-5 py-2 text-sm lg:text-base font-bold transition-all duration-300 text-[#E6C280] border border-[#B38540]/50 bg-[#B38540]/10 rounded-full">首頁</button>
+        <button onclick="navigateTo('about')" data-target="about" class="nav-btn px-5 py-2 text-sm lg:text-base font-bold transition-all duration-300 text-[#888888] hover:text-[#E6C280] border border-transparent rounded-full hover:bg-white/5">關於體超</button>
+        <button onclick="navigateTo('facilities')" data-target="facilities" class="nav-btn px-5 py-2 text-sm lg:text-base font-bold transition-all duration-300 text-[#888888] hover:text-[#E6C280] border border-transparent rounded-full hover:bg-white/5">場館介紹</button>
+        <button onclick="navigateTo('courses')" data-target="courses" class="nav-btn px-5 py-2 text-sm lg:text-base font-bold transition-all duration-300 text-[#888888] hover:text-[#E6C280] border border-transparent rounded-full hover:bg-white/5">專業課程</button>
+        <button onclick="navigateTo('contact')" data-target="contact" class="nav-btn px-5 py-2 text-sm lg:text-base font-bold transition-all duration-300 text-[#888888] hover:text-[#E6C280] border border-transparent rounded-full hover:bg-white/5">聯絡我們</button>
+        <button onclick="navigateTo('presale')" data-target="presale" class="nav-btn text-sm lg:text-base font-bold transition-all duration-500 bg-gradient-to-r from-[#DFB973] to-[#A87B38] text-[#000] px-6 py-2.5 rounded-full shadow-[0_0_20px_rgba(230,194,128,0.15)] hover:shadow-[0_0_25px_rgba(230,194,128,0.4)] hover:scale-105 ml-4">預售優惠</button>
+      </div>
+
+      <!-- 手機版漢堡選單按鈕 -->
+      <div class="md:hidden flex items-center">
+        <button onclick="toggleMobileMenu()" class="text-[#888888] hover:text-[#E6C280] focus:outline-none transition-colors">
+          <i data-lucide="menu" id="menu-icon-open" class="w-8 h-8"></i>
+          <i data-lucide="x" id="menu-icon-close" class="w-8 h-8 hidden"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手機版展開選單 -->
+  <div id="mobile-menu" class="hidden md:hidden bg-[#050505]/95 backdrop-blur-xl border-t border-white/10 max-h-[85vh] overflow-y-auto shadow-2xl absolute w-full transition-all">
+    <div class="px-6 pt-6 pb-8 space-y-3">
+      <button onclick="navigateTo('home')" data-target="home" class="nav-btn-mobile block w-full text-center px-4 py-4 rounded-xl text-lg font-bold bg-[#111] text-[#E6C280] transition-colors border border-[#B38540]/50">首頁</button>
+      <button onclick="navigateTo('about')" data-target="about" class="nav-btn-mobile block w-full text-center px-4 py-4 rounded-xl text-lg font-bold text-[#888888] hover:bg-[#111] hover:text-[#E6C280] transition-colors border border-transparent">關於體超</button>
+      <button onclick="navigateTo('facilities')" data-target="facilities" class="nav-btn-mobile block w-full text-center px-4 py-4 rounded-xl text-lg font-bold text-[#888888] hover:bg-[#111] hover:text-[#E6C280] transition-colors border border-transparent">場館介紹</button>
+      <button onclick="navigateTo('courses')" data-target="courses" class="nav-btn-mobile block w-full text-center px-4 py-4 rounded-xl text-lg font-bold text-[#888888] hover:bg-[#111] hover:text-[#E6C280] transition-colors border border-transparent">專業課程</button>
+      <button onclick="navigateTo('contact')" data-target="contact" class="nav-btn-mobile block w-full text-center px-4 py-4 rounded-xl text-lg font-bold text-[#888888] hover:bg-[#111] hover:text-[#E6C280] transition-colors border border-transparent">聯絡我們</button>
+      <div class="pt-6 mt-4 border-t border-white/10">
+        <button onclick="navigateTo('presale')" data-target="presale" class="nav-btn-mobile block w-full text-center px-4 py-5 rounded-xl text-xl font-bold bg-gradient-to-r from-[#DFB973] to-[#A87B38] text-[#000] shadow-[0_0_20px_rgba(230,194,128,0.2)] border border-transparent">搶先預售優惠</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="flex-grow">
+
+<section id="home" class="page-section active page-enter">
+  <div class="relative bg-[#000] overflow-hidden min-h-screen flex flex-col justify-center">
+    
+    <!-- 全新英雄視覺背景 -->
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=1920&auto=format&fit=crop" alt="體超 SUPER HUMAN 視覺底圖" class="w-full h-full object-cover object-center animate-bg-zoom opacity-[0.5]" />
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.8)_60%,rgba(0,0,0,1)_100%)] z-10"></div>
+      <div class="absolute inset-0 bg-noise"></div>
+      <div class="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-[#000000] via-[#000000]/80 to-transparent z-[12]"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full pt-20 pb-24 md:pt-24 md:pb-32">
+      <div class="text-center flex flex-col items-center w-full">
+        
+        <div class="relative w-full flex flex-col items-center justify-center mt-6 mb-12 stagger-item delay-100">
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[600px] md:h-[600px] pointer-events-none z-0 mix-blend-screen opacity-30">
+            <div class="absolute top-0 left-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-[#E6C280] blur-[100px] md:blur-[150px] rounded-full animate-blob"></div>
+            <div class="absolute top-10 right-0 w-[200px] h-[200px] md:w-[400px] md:h-[400px] bg-white/20 blur-[100px] md:blur-[150px] rounded-full animate-blob animation-delay-2000"></div>
+          </div>
+          
+          <h1 class="relative z-20 premium-title-anim flex flex-col justify-center items-center w-full font-black leading-none">
+            <span class="block text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)] mb-2 md:mb-6 text-metallic-silver tracking-[0.05em]">
+              體超
+            </span>
+            <span class="block text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] mt-4 tracking-[0.25em] drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)] text-metallic-gold uppercase">
+              SUPER HUMAN
+            </span>
+          </h1>
+        </div>
+
+        <p class="text-lg sm:text-xl text-metallic-gold md:text-2xl font-bold tracking-[0.3em] text-center mx-auto stagger-item delay-200 relative z-20 drop-shadow-md">
+        打造更好的運動體驗
+        </p>
+        
+        <div class="mt-12 flex flex-col sm:flex-row gap-5 justify-center px-4 sm:px-0 stagger-item delay-400 w-full relative z-30">
+          <button onclick="navigateTo('presale')" class="w-full sm:w-auto neon-btn-wrapper transition-all transform hover:-translate-y-1">
+            <span class="neon-btn-inner px-10 py-4 md:py-5 text-lg font-black text-[#050505] tracking-widest shadow-[0_0_20px_rgba(230,194,128,0.2)]">搶先預售登記</span>
+          </button>
+          <button onclick="scrollToCorporate()" class="w-full sm:w-auto px-10 py-4 md:py-5 border border-[#333] text-white bg-[#111]/80 backdrop-blur-xl text-lg font-bold rounded-full hover:bg-[#222] hover:border-[#E6C280]/50 hover:text-[#E6C280] transition-all transform hover:-translate-y-1 shadow-2xl">
+            企業合作洽詢
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 animate-bounce flex-col items-center cursor-pointer hidden md:flex opacity-50 hover:opacity-100 transition-opacity duration-300" onclick="window.scrollTo({top: window.innerHeight, behavior: 'smooth'})">
+      <span class="text-[#888] text-[10px] font-bold tracking-[0.3em] mb-3 uppercase">Discover</span>
+      <i data-lucide="chevron-down" class="text-[#E6C280] w-6 h-6"></i>
+    </div>
+  </div>
+
+  <div id="corporate-services" class="bg-[#000000] py-20 md:py-32 relative">
+    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.02] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="bg-gradient-to-b from-[#0A0A0A] to-[#050505] rounded-[2.5rem] p-8 md:p-16 border border-[#222] shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative stagger-item delay-200 overflow-hidden">
+        
+        <div class="absolute top-0 right-0 -mr-16 -mt-16 opacity-5 pointer-events-none">
+          <i data-lucide="briefcase" class="w-80 h-80 text-[#E6C280]"></i>
+        </div>
+        
+        <div class="relative z-10 flex flex-col lg:flex-row gap-16">
+          <div class="lg:w-1/2">
+            <div class="flex items-center mb-8">
+              <div class="w-12 h-12 rounded-full bg-[#111] border border-[#333] flex items-center justify-center mr-5 shadow-inner">
+                <i data-lucide="briefcase" class="text-[#E6C280] w-6 h-6"></i>
+              </div>
+              <h2 class="text-3xl md:text-4xl font-black text-white tracking-wide">企業與社區方案</h2>
+            </div>
+            <p class="text-[#888] mb-12 text-base md:text-lg leading-relaxed text-justify">
+            我們提供客製化的企業與社區健康促進方案，將專業運動與健康管理導入工作場域與社區生活，提升整體活力、生產力與生活品質。從單場講座到長期合作規劃，皆可量身打造。
+            </p>
+
+            <!-- 🌟 四色獨立直觀方塊區塊 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+              
+              <!-- 卡片 1: 企業健康講座 (經典鍛金) -->
+              <div class="relative group rounded-2xl p-[1px] bg-gradient-to-br from-[#DFB973]/50 via-[#B38540]/20 to-transparent hover:from-[#DFB973] hover:via-[#B38540] hover:to-[#111] transition-all duration-700 hover:-translate-y-2 shadow-lg hover:shadow-[0_15px_30px_-5px_rgba(223,185,115,0.3)] cursor-default">
+                <div class="relative h-full bg-gradient-to-b from-[#0F0F0F] to-[#050505] p-6 md:p-8 rounded-[15px] overflow-hidden z-10">
+                  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#DFB973]/60 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <div class="absolute -bottom-10 -right-10 w-28 h-28 bg-[#DFB973] opacity-[0.15] group-hover:opacity-30 blur-[40px] transition-all duration-700 pointer-events-none"></div>
+                  <h4 class="text-lg font-bold text-[#DFB973] mb-3 transition-colors duration-500 relative z-20 flex items-center gap-3">
+                    <span class="w-2 h-2 rounded-full bg-[#DFB973] shadow-[0_0_8px_rgba(223,185,115,0.8)]"></span>
+                    企業健康講座
+                  </h4>
+                  <p class="text-[#888] text-sm leading-relaxed relative z-20 group-hover:text-[#AAA] transition-colors duration-500">
+                    針對辦公族常見問題設計主題式課程，降低職業傷害風險，提升效率。
+                  </p>
+                </div>
+              </div>
+            
+              <!-- 卡片 2: 樂齡社區活動 (鉑金星銀) -->
+              <div class="relative group rounded-2xl p-[1px] bg-gradient-to-br from-[#E2E8F0]/50 via-[#94A3B8]/20 to-transparent hover:from-[#E2E8F0] hover:via-[#94A3B8] hover:to-[#111] transition-all duration-700 hover:-translate-y-2 shadow-lg hover:shadow-[0_15px_30px_-5px_rgba(226,232,240,0.2)] cursor-default">
+                <div class="relative h-full bg-gradient-to-b from-[#0F0F0F] to-[#050505] p-6 md:p-8 rounded-[15px] overflow-hidden z-10">
+                  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#E2E8F0]/60 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <div class="absolute -bottom-10 -right-10 w-28 h-28 bg-[#E2E8F0] opacity-[0.15] group-hover:opacity-30 blur-[40px] transition-all duration-700 pointer-events-none"></div>
+                  <h4 class="text-lg font-bold text-[#E2E8F0] mb-3 transition-colors duration-500 relative z-20 flex items-center gap-3">
+                    <span class="w-2 h-2 rounded-full bg-[#E2E8F0] shadow-[0_0_8px_rgba(226,232,240,0.8)]"></span>
+                    樂齡社區活動
+                  </h4>
+                  <p class="text-[#888] text-sm leading-relaxed relative z-20 group-hover:text-[#AAA] transition-colors duration-500">
+                    規劃銀髮族防跌講座、基礎肌力訓練與平衡訓練活動，強化照護能力。
+                  </p>
+                </div>
+              </div>
+            
+              <!-- 卡片 3: 親子體適能 (玫瑰晨金) -->
+              <div class="relative group rounded-2xl p-[1px] bg-gradient-to-br from-[#F3D5D5]/50 via-[#D29E9E]/20 to-transparent hover:from-[#F3D5D5] hover:via-[#D29E9E] hover:to-[#111] transition-all duration-700 hover:-translate-y-2 shadow-lg hover:shadow-[0_15px_30px_-5px_rgba(243,213,213,0.2)] cursor-default">
+                <div class="relative h-full bg-gradient-to-b from-[#0F0F0F] to-[#050505] p-6 md:p-8 rounded-[15px] overflow-hidden z-10">
+                  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#F3D5D5]/60 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <div class="absolute -bottom-10 -right-10 w-28 h-28 bg-[#F3D5D5] opacity-[0.15] group-hover:opacity-30 blur-[40px] transition-all duration-700 pointer-events-none"></div>
+                  <h4 class="text-lg font-bold text-[#F3D5D5] mb-3 transition-colors duration-500 relative z-20 flex items-center gap-3">
+                    <span class="w-2 h-2 rounded-full bg-[#F3D5D5] shadow-[0_0_8px_rgba(243,213,213,0.8)]"></span>
+                    親子體適能
+                  </h4>
+                  <p class="text-[#888] text-sm leading-relaxed relative z-20 group-hover:text-[#AAA] transition-colors duration-500">
+                    設計家庭日或親子運動課程，透過互動體能遊戲增進情感與健康意識。
+                  </p>
+                </div>
+              </div>
+            
+              <!-- 卡片 4: 專屬包班課程 (琥珀古銅) -->
+              <div class="relative group rounded-2xl p-[1px] bg-gradient-to-br from-[#E6CCB8]/50 via-[#B88661]/20 to-transparent hover:from-[#E6CCB8] hover:via-[#B88661] hover:to-[#111] transition-all duration-700 hover:-translate-y-2 shadow-lg hover:shadow-[0_15px_30px_-5px_rgba(230,204,184,0.2)] cursor-default">
+                <div class="relative h-full bg-gradient-to-b from-[#0F0F0F] to-[#050505] p-6 md:p-8 rounded-[15px] overflow-hidden z-10">
+                  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[1px] bg-gradient-to-r from-transparent via-[#E6CCB8]/60 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <div class="absolute -bottom-10 -right-10 w-28 h-28 bg-[#E6CCB8] opacity-[0.15] group-hover:opacity-30 blur-[40px] transition-all duration-700 pointer-events-none"></div>
+                  <h4 class="text-lg font-bold text-[#E6CCB8] mb-3 transition-colors duration-500 relative z-20 flex items-center gap-3">
+                    <span class="w-2 h-2 rounded-full bg-[#E6CCB8] shadow-[0_0_8px_rgba(230,204,184,0.8)]"></span>
+                    專屬包班課程
+                  </h4>
+                  <p class="text-[#888] text-sm leading-relaxed relative z-20 group-hover:text-[#AAA] transition-colors duration-500">
+                    為企業、學校或社區團體量身打造專屬運動課程，依人數目標彈性規劃。
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          
+          <div class="lg:w-1/2">
+            <div class="bg-[#050505] rounded-[2rem] p-8 md:p-10 shadow-2xl border border-[#222] relative h-full">
+              <div id="corp-success" class="hidden text-center py-8 animate-fadeIn absolute inset-0 bg-[#050505] rounded-[2rem] flex flex-col items-center justify-center z-20">
+                <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-[#111] mb-6 border border-[#E6C280]/30 shadow-[0_0_20px_rgba(230,194,128,0.1)]">
+                  <i data-lucide="check-circle" class="w-10 h-10 text-[#E6C280]"></i>
+                </div>
+                <h4 class="text-2xl font-black text-white mb-3 tracking-widest">諮詢送出成功！</h4>
+                <p class="text-[#888] text-base">專屬顧問將會盡快與您聯繫</p>
+                <button onclick="resetCorpForm()" class="mt-8 text-sm text-[#E6C280] hover:text-white transition-colors border-b border-[#E6C280] pb-1 font-bold tracking-widest">重新填寫</button>
+              </div>
+              
+              <div id="corp-form-container" class="flex flex-col h-full justify-center">
+                <h3 class="text-2xl md:text-3xl font-black text-white mb-3 tracking-wide">專人合作諮詢</h3>
+                <p class="text-sm text-[#888] mb-8">留下您的聯繫資訊，我們將為您安排最適切的方案規劃。</p>
+                <form id="corp-form" onsubmit="handleCorpSubmit(event)" class="space-y-5">
+                  <div>
+                    <label class="block text-xs font-bold text-[#666] mb-2 tracking-widest uppercase">公司 / 單位名稱 <span class="text-[#E6C280]">*</span></label>
+                    <input required type="text" class="w-full px-5 py-4 rounded-xl border border-[#222] focus:border-[#E6C280] outline-none transition-colors bg-[#0A0A0A] text-white focus:bg-[#111]" placeholder="請輸入單位名稱" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-[#666] mb-2 tracking-widest uppercase">聯絡人姓名 <span class="text-[#E6C280]">*</span></label>
+                    <input required type="text" class="w-full px-5 py-4 rounded-xl border border-[#222] focus:border-[#E6C280] outline-none transition-colors bg-[#0A0A0A] text-white focus:bg-[#111]" placeholder="負責人或承辦人" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-[#666] mb-2 tracking-widest uppercase">聯絡電話 <span class="text-[#E6C280]">*</span></label>
+                    <input required type="tel" class="w-full px-5 py-4 rounded-xl border border-[#222] focus:border-[#E6C280] outline-none transition-colors bg-[#0A0A0A] text-white focus:bg-[#111]" placeholder="手機或市話" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-[#666] mb-2 tracking-widest uppercase">電子信箱 <span class="text-[#E6C280]">*</span></label>
+                    <input required type="email" class="w-full px-5 py-4 rounded-xl border border-[#222] focus:border-[#E6C280] outline-none transition-colors bg-[#0A0A0A] text-white focus:bg-[#111]" placeholder="example@mail.com" />
+                  </div>
+                  <button type="submit" class="w-full bg-gradient-to-r from-[#DFB973] to-[#A87B38] text-[#000] font-black tracking-widest py-4 rounded-xl shadow-[0_5px_20px_rgba(230,194,128,0.2)] hover:shadow-[0_5px_25px_rgba(230,194,128,0.4)] transition-all transform hover:-translate-y-1 mt-4 text-lg">
+                    確認送出
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="page-section page-enter bg-[#050505]">
+  <div class="text-center py-20 md:py-32 bg-[#0A0A0A] border-b border-[#1A1A1A]">
+    <h2 class="text-xs md:text-sm font-bold tracking-[0.3em] text-[#E6C280] uppercase mb-4">The Better You</h2>
+    <h1 class="text-4xl md:text-6xl font-black text-white premium-title-anim tracking-wider">關於體超</h1>
+    <div class="w-16 h-1 bg-gradient-to-r from-[#E6C280] to-[#A87B38] mx-auto mt-8 rounded-full"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 space-y-32 md:space-y-48">
+    
+    <!-- 01 THE START -->
+    <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20 scroll-reveal">
+      <div class="w-full md:w-1/2 reveal-element reveal-left">
+        <div class="relative group rounded-[2.5rem] overflow-hidden aspect-[4/3] shadow-[0_20px_50px_rgba(0,0,0,0.8)] bg-[#111] border border-[#222]">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-60"></div>
+          <img src="https://yourimageshare.com/ib/ZnAKP2R4nQ.png" alt="從一個念頭開始" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[1.5s] filter brightness-75 contrast-125 z-0">
+        </div>
+      </div>
+      <div class="w-full md:w-1/2 reveal-element reveal-right">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-[1px] bg-[#E6C280]"></div>
+          <span class="text-[#E6C280] font-bold tracking-[0.2em] text-xs md:text-sm uppercase">01. The Start</span>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-black text-white mb-8 leading-tight tracking-wide">
+          從一個念頭開始<br>
+          <span class="text-metallic-gold mt-2 block">打造更好的運動體驗</span>
+        </h2>
+        <p class="text-[#888] text-base md:text-lg leading-relaxed mb-6 text-justify">很多人對健身房的第一印象，是壓力、陌生，甚至害怕自己做不好。也有人以為，運動一定要練到很累、很痛、走不出去，才代表有效。</p>
+        <p class="text-[#888] text-base md:text-lg leading-relaxed mb-6 text-justify">但體超相信，運動不應該是一種懲罰，而是一種讓身體和生活慢慢變好的方法。</p>
+        <p class="text-[#888] text-base md:text-lg leading-relaxed mb-10 text-justify">我們希望打造一個讓人願意走進來、願意持續留下來的精品運動空間。這裡不只追求訓練成果，更重視每個人在過程中的感受、節奏與安全感。</p>
+        
+        <!-- 🌟 精準修正的標語區塊 -->
+        <div class="border-l-4 border-[#E6C280] bg-gradient-to-r from-[#111] to-transparent p-6 md:p-8 rounded-r-2xl relative overflow-hidden group">
+          <div class="absolute -right-10 -top-10 w-32 h-32 bg-[#E6C280] opacity-5 blur-[40px] group-hover:opacity-20 transition-opacity duration-700"></div>
+          <p class="text-white font-bold text-lg md:text-xl tracking-wide leading-relaxed relative z-10">
+            體超想做的，是陪你找到一種可以長久維持的運動方式。
+          </p>
+          <span class="text-metallic-gold block mt-4 text-xl md:text-2xl font-black tracking-widest relative z-10">
+            #和你一起變得更好
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 THE TEAM -->
+    <div class="flex flex-col md:flex-row-reverse items-center gap-12 md:gap-20 scroll-reveal">
+      <div class="w-full md:w-1/2 reveal-element reveal-right">
+        <div class="relative group rounded-[2.5rem] overflow-hidden aspect-[4/3] shadow-[0_20px_50px_rgba(0,0,0,0.8)] bg-[#111] border border-[#222]">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-60"></div>
+          <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&q=80&w=1920" alt="專業教練" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[1.5s] filter grayscale-[40%] contrast-125 z-0">
+        </div>
+      </div>
+      <div class="w-full md:w-1/2 reveal-element reveal-left">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-[1px] bg-[#E6C280]"></div>
+          <span class="text-[#E6C280] font-bold tracking-[0.2em] text-xs md:text-sm uppercase">02. The Team</span>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-black text-white mb-8 leading-tight tracking-wide">
+          專業教練<br>
+          <span class="text-metallic-gold mt-2 block">是體超最重要的核心</span>
+        </h2>
+        <p class="text-[#888] text-base md:text-lg leading-relaxed mb-6 text-justify">在體超，教練不只是帶動作的人，而是陪伴會員建立正確觀念、降低受傷風險、提升訓練效率的重要角色。</p>
+        <p class="text-[#888] text-base md:text-lg leading-relaxed mb-6 text-justify">我們重視每一位教練的教學品質與專業知識，並要求教練持續進修與成長。從動作指導、身體評估、課程安排到溝通服務，都以更高標準要求自己。</p>
+        <p class="text-[#888] text-base md:text-lg leading-relaxed mb-10 text-justify">因為我們知道，真正能讓會員改變的，不只是一次訓練，而是每一次被正確引導、被鼓勵、被陪伴的累積。</p>
+        <blockquote class="text-[#E6C280] font-medium text-lg md:text-xl italic leading-relaxed bg-[#111] border border-[#222] p-8 rounded-3xl shadow-lg relative">
+          <div class="absolute -top-4 -left-2 text-6xl text-[#333] font-serif leading-none">"</div>
+          <span class="relative z-10 tracking-wide">好的教練，能讓運動不再只是辛苦，而是變成一件值得期待的事。</span>
+        </blockquote>
+      </div>
+    </div>
+
+    <!-- 03 THE VISION -->
+    <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20 scroll-reveal">
+      <div class="w-full md:w-1/2 reveal-element reveal-left">
+        <div class="relative group rounded-[2.5rem] overflow-hidden aspect-[4/3] shadow-[0_20px_50px_rgba(0,0,0,0.8)] bg-[#111] border border-[#222]">
+          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-60"></div>
+          <img src="https://yourimageshare.com/ib/NYnVTaDlGb.png" alt="打破健身迷思" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[1.5s] filter grayscale-[50%] contrast-125 group-hover:grayscale-0 z-0">
+        </div>
+      </div>
+      <div class="w-full md:w-1/2 reveal-element reveal-right">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-[1px] bg-[#E6C280]"></div>
+          <span class="text-[#E6C280] font-bold tracking-[0.2em] text-xs md:text-sm uppercase">03. The Vision</span>
+        </div>
+        <h2 class="text-3xl md:text-5xl font-black text-white mb-8 leading-tight tracking-wide">
+          打破健身迷思<br>
+          <span class="text-metallic-gold mt-2 block">讓運動回到生活本身</span>
+        </h2>
+        <p class="text-[#888] text-base md:text-lg leading-relaxed mb-6 text-justify">體超希望打破傳統健身房給人的迷思。運動不是一定要練到筋疲力盡，才叫有效。運動也不該只是為了減肥，或因為不滿意自己的身材才開始。</p>
+        <p class="text-[#888] text-base md:text-lg leading-relaxed mb-6 text-justify">我們希望每一位來到體超的人，都能重新理解運動的價值。你可以是為了健康、體態、自信、精神狀態，或是希望生活變得更穩定而開始。</p>
+        <p class="text-[#888] text-base md:text-lg leading-relaxed mb-10 text-justify">體超的目標，是讓運動成為生活的一部分，而不是短暫的嘗試。讓你不再一輩子被減肥、身材焦慮或不敢照鏡子的情緒困住，而是透過穩定訓練，慢慢找回對身體的掌控感。</p>
+        
+        <div class="p-[1px] rounded-3xl bg-gradient-to-br from-[#E6C280] via-[#B38540] to-transparent shadow-[0_10px_30px_rgba(230,194,128,0.1)]">
+          <div class="bg-[#0A0A0A] p-6 md:p-8 rounded-[23px]">
+            <p class="text-white font-black text-lg md:text-xl tracking-wider text-center">運動不是為了變成別人，<br class="md:hidden">而是讓你成為更好的自己。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 品牌承諾區塊 -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 scroll-reveal">
+    <div class="bg-gradient-to-b from-[#111] to-[#0A0A0A] border border-[#222] rounded-[3rem] shadow-[0_30px_60px_rgba(0,0,0,0.8)] p-10 md:p-20 relative overflow-hidden reveal-element">
+      <div class="absolute inset-0 opacity-20 pointer-events-none overflow-hidden rounded-[3rem]">
+        <div class="absolute -right-32 -bottom-32 w-[600px] h-[600px] bg-[#E6C280] rounded-full blur-[150px]"></div>
+      </div>
+      
+      <div class="relative z-10 text-center mb-16">
+        <h2 class="text-3xl md:text-5xl font-black text-white mb-6 tracking-wide">體超的 <span class="text-metallic-gold">品牌承諾</span></h2>
+        <div class="w-20 h-1 bg-gradient-to-r from-[#E6C280] to-[#B38540] mx-auto rounded-full"></div>
+      </div>
+      
+      <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+        <div class="bg-[#050505] p-8 md:p-10 rounded-3xl border border-[#222] hover:border-[#E6C280]/40 hover:shadow-[0_10px_30px_rgba(230,194,128,0.1)] transition-all duration-500 group">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="p-3 rounded-2xl bg-[#111] border border-[#333] group-hover:border-[#E6C280]/50 transition-colors">
+              <i data-lucide="shield-check" class="text-[#E6C280] w-8 h-8"></i>
+            </div>
+            <h4 class="text-2xl font-black text-white tracking-widest">專業保證</h4>
+          </div>
+          <p class="text-[#888] leading-relaxed text-justify text-base md:text-lg">體超重視教練的專業能力與教學品質，持續提升訓練技術、服務流程與課程設計。從訓練前的需求了解，到課程中的動作調整與安全提醒，我們都希望讓會員在更安心、更有效的環境中穩定進步。</p>
+        </div>
+        
+        <div class="bg-[#050505] p-8 md:p-10 rounded-3xl border border-[#222] hover:border-[#E6C280]/40 hover:shadow-[0_10px_30px_rgba(230,194,128,0.1)] transition-all duration-500 group">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="p-3 rounded-2xl bg-[#111] border border-[#333] group-hover:border-[#E6C280]/50 transition-colors">
+              <i data-lucide="heart-handshake" class="text-[#E6C280] w-8 h-8"></i>
+            </div>
+            <h4 class="text-2xl font-black text-white tracking-widest">友善陪伴</h4>
+          </div>
+          <p class="text-[#888] leading-relaxed text-justify text-base md:text-lg">我們希望降低健身房帶來的壓力感，讓每一位會員都能用適合自己的節奏開始。不需要跟別人比較，也不需要一開始就做到完美。只要願意開始，體超就會陪你一步一步前進。</p>
+        </div>
+        
+        <div class="bg-[#050505] p-8 md:p-10 rounded-3xl border border-[#222] hover:border-[#E6C280]/40 hover:shadow-[0_10px_30px_rgba(230,194,128,0.1)] transition-all duration-500 group">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="p-3 rounded-2xl bg-[#111] border border-[#333] group-hover:border-[#E6C280]/50 transition-colors">
+              <i data-lucide="flame" class="text-[#E6C280] w-8 h-8"></i>
+            </div>
+            <h4 class="text-2xl font-black text-white tracking-widest">提升運動文化</h4>
+          </div>
+          <p class="text-[#888] leading-relaxed text-justify text-base md:text-lg">體超相信，運動不只是短期目標，而是一種生活態度。我們希望打破「健身一定很痛苦」的想像，讓更多人把運動融入日常，讓健康、自信與好狀態成為生活的一部分。</p>
+        </div>
+        
+        <div class="bg-[#050505] p-8 md:p-10 rounded-3xl border border-[#222] hover:border-[#E6C280]/40 hover:shadow-[0_10px_30px_rgba(230,194,128,0.1)] transition-all duration-500 group">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="p-3 rounded-2xl bg-[#111] border border-[#333] group-hover:border-[#E6C280]/50 transition-colors">
+              <i data-lucide="award" class="text-[#E6C280] w-8 h-8"></i>
+            </div>
+            <h4 class="text-2xl font-black text-white tracking-widest">成就教練價值</h4>
+          </div>
+          <p class="text-[#888] leading-relaxed text-justify text-base md:text-lg">體超也希望每一位教練都能兼顧自己的訓練表現、專業成長與穩定生活。當教練的專業被尊重，會員才能得到更好的服務體驗，也能在更正向的運動文化中持續成長。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center pb-32 max-w-4xl mx-auto px-4 scroll-reveal">
+    <div class="reveal-element">
+      <h2 class="text-3xl md:text-4xl font-black text-white mb-8 tracking-wide leading-snug">體超，讓運動成為健康的後盾。</h2>
+      <p class="text-[#888] text-lg md:text-xl leading-relaxed mb-12 font-medium">
+        我們不是要你短時間改變一切，<br class="hidden md:block">而是陪你一步一步，建立更穩定、更有力量的生活。<br><br>
+        <span class="text-metallic-gold font-black text-2xl md:text-3xl tracking-widest block mt-4 drop-shadow-md">讓運動，來讓你的生活更美好。</span>
+      </p>
+      <button onclick="navigateTo('presale')" class="neon-btn-wrapper shadow-2xl transition-all transform hover:-translate-y-2 mx-auto">
+        <span class="neon-btn-inner px-14 py-6 text-xl font-black text-[#000] tracking-widest">立即預約無壓體驗</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section id="facilities" class="page-section page-enter py-20 md:py-32 bg-[#050505]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="text-center mb-20 stagger-item delay-100">
+      <h2 class="text-xs md:text-sm font-bold tracking-[0.3em] text-[#E6C280] uppercase mb-4">Premium Facilities</h2>
+      <h1 class="text-4xl md:text-6xl font-black text-white premium-title-anim tracking-wider">場館介紹</h1>
+      <div class="w-16 h-1 bg-gradient-to-r from-[#E6C280] to-[#B38540] mx-auto mt-8 rounded-full"></div>
+      <p class="mt-8 text-[#888] max-w-2xl mx-auto text-lg md:text-xl text-center font-medium leading-relaxed">
+        斥資打造最高規格的硬體設備，將多元運動項目完美整合，滿足全方位訓練需求。
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 scroll-reveal">
+      
+      <div class="md:col-span-2 relative h-80 md:h-[500px] rounded-[2.5rem] overflow-hidden group shadow-[0_20px_40px_rgba(0,0,0,0.5)] border border-[#222] reveal-element">
+        <img src="https://yourimageshare.com/ib/AGA4wY4Jf0.jpg" alt="專業健身房" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] opacity-70 filter contrast-125" />
+        <div class="absolute inset-0 bg-gradient-to-t from-[#000] via-[#000]/40 to-transparent"></div>
+        <div class="absolute bottom-8 left-8 md:bottom-12 md:left-12 right-8 z-10">
+          <div class="w-12 h-1 bg-[#E6C280] mb-4 transition-all duration-500 group-hover:w-24"></div>
+          <h3 class="text-3xl md:text-4xl font-black text-white mb-3 group-hover:text-[#E6C280] transition-colors duration-500 tracking-wide">專業健身重訓區</h3>
+          <p class="text-[#AAA] text-base md:text-lg facility-card-desc max-w-xl">寬敞無壓環境，配備國際頂規有氧與重訓器材，滿足各強度鍛鍊需求。</p>
+        </div>
+      </div>
+
+      <div class="col-span-1 relative h-72 md:h-96 rounded-[2.5rem] overflow-hidden group shadow-[0_15px_30px_rgba(0,0,0,0.5)] border border-[#222] reveal-element delay-100">
+        <img src="https://yourimageshare.com/ib/PYhwjZjzeT.png" alt="訓練草皮區" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] opacity-70 filter contrast-125" />
+        <div class="absolute inset-0 bg-gradient-to-t from-[#000] via-[#000]/40 to-transparent"></div>
+        <div class="absolute bottom-8 left-8 right-8 z-10">
+          <h3 class="text-2xl font-black text-white mb-2 group-hover:text-[#E6C280] transition-colors duration-500 tracking-wide">專屬訓練草皮區</h3>
+          <p class="text-[#AAA] text-sm md:text-base facility-card-desc">多功能人造草皮，適合進行雪橇推拉與功能性爆發力訓練。</p>
+        </div>
+      </div>
+
+      <div class="col-span-1 relative h-72 md:h-96 rounded-[2.5rem] overflow-hidden group shadow-[0_15px_30px_rgba(0,0,0,0.5)] border border-[#222] reveal-element delay-200">
+        <img src="https://yourimageshare.com/ib/5vBNwIfMiV.png" alt="皮拉提斯" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] opacity-70 filter contrast-125" />
+        <div class="absolute inset-0 bg-gradient-to-t from-[#000] via-[#000]/40 to-transparent"></div>
+        <div class="absolute bottom-8 left-8 right-8 z-10">
+          <h3 class="text-2xl font-black text-white mb-2 group-hover:text-[#E6C280] transition-colors duration-500 tracking-wide">皮拉提斯教室</h3>
+          <p class="text-[#AAA] text-sm md:text-base facility-card-desc">專屬器械空間，透過核心控制與呼吸，深層雕塑肌肉線條。</p>
+        </div>
+      </div>
+
+      <div class="col-span-1 relative h-72 md:h-96 rounded-[2.5rem] overflow-hidden group shadow-[0_15px_30px_rgba(0,0,0,0.5)] border border-[#222] reveal-element delay-100">
+        <img src="https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?auto=format&fit=crop&q=80&w=1200" alt="團課教室" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] opacity-70 filter contrast-125" />
+        <div class="absolute inset-0 bg-gradient-to-t from-[#000] via-[#000]/40 to-transparent"></div>
+        <div class="absolute bottom-8 left-8 right-8 z-10">
+          <h3 class="text-2xl font-black text-white mb-2 group-hover:text-[#E6C280] transition-colors duration-500 tracking-wide">專業團課教室</h3>
+          <p class="text-[#AAA] text-sm md:text-base facility-card-desc">寬敞無柱空間配備專業減震地板，提供瑜伽、有氧與舞蹈課程。</p>
+        </div>
+      </div>
+
+      <div class="col-span-1 relative h-72 md:h-96 rounded-[2.5rem] overflow-hidden group shadow-[0_15px_30px_rgba(0,0,0,0.5)] border border-[#222] reveal-element delay-200">
+        <img src="https://yourimageshare.com/ib/AcSgLkj73r.png" alt="1對1私人教練區" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] opacity-70 filter contrast-125" />
+        <div class="absolute inset-0 bg-gradient-to-t from-[#000] via-[#000]/40 to-transparent"></div>
+        <div class="absolute bottom-8 left-8 right-8 z-10">
+          <h3 class="text-2xl font-black text-white mb-2 group-hover:text-[#E6C280] transition-colors duration-500 tracking-wide">1對1私人教練區</h3>
+          <p class="text-[#AAA] text-sm md:text-base facility-card-desc">打造高隱私專屬訓練場域，由教練貼身指導，確保動作精準安全。</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="courses" class="page-section page-enter py-20 md:py-32 bg-[#0A0A0A]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="text-center mb-20 md:mb-32 stagger-item delay-100">
+      <h2 class="text-xs md:text-sm font-bold tracking-[0.3em] text-[#E6C280] uppercase mb-4">Programs & Classes</h2>
+      <h1 class="text-4xl md:text-6xl font-black text-white premium-title-anim tracking-wider">專業課程介紹</h1>
+      <div class="w-16 h-1 bg-gradient-to-r from-[#E6C280] to-[#B38540] mx-auto mt-8 rounded-full"></div>
+      <p class="mt-8 text-[#888] max-w-2xl mx-auto text-lg md:text-xl text-center font-medium leading-relaxed">
+        告別枯燥乏味的單一訓練！我們將專業系統化，搭配頂尖師資，從爆汗燃脂到長輩防跌，滿足全齡的健康需求。
+      </p>
+    </div>
+
+    <!-- 心肺燃脂類 -->
+    <div class="relative flex flex-col lg:flex-row gap-12 lg:gap-20 mb-32 lg:items-start scroll-reveal">
+      <div class="lg:w-1/3 lg:sticky lg:top-32 reveal-element">
+        <div class="inline-flex items-center justify-center p-5 border border-[#333] rounded-[1.5rem] bg-[#111] shadow-xl mb-8">
+          <i data-lucide="flame" class="w-10 h-10 text-[#E6C280]"></i>
+        </div>
+        <h3 class="text-4xl font-black text-white mb-3 tracking-wide">心肺燃脂類</h3>
+        <span class="text-metallic-gold font-bold tracking-widest text-sm uppercase block mb-6">Cardio & Fat Burning</span>
+        <p class="text-[#888] text-lg leading-relaxed mb-8 text-justify">搭配快節奏音樂，透過高活動量的訓練，幫助你快速消耗卡路里、有效減脂，並大幅提升心肺耐力。</p>
+        <div class="flex flex-wrap gap-3 mb-8">
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#爆汗燃脂</span>
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#心肺強化</span>
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#釋放壓力</span>
+        </div>
+      </div>
+
+      <div class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8 reveal-element delay-100">
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col sm:col-span-2">
+           <div class="relative h-64 md:h-80 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/HIg5yc6wX2.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-105 opacity-60 filter contrast-125">
+             <div class="absolute top-6 right-6 bg-[#000]/80 backdrop-blur-md px-4 py-1.5 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">中高強度</div>
+           </div>
+           <div class="p-8 md:p-10 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-2xl font-black text-white mb-4 flex items-center gap-3 tracking-wide"><i data-lucide="bike" class="w-6 h-6 text-[#E6C280]"></i> 燃脂飛輪 (Spinning)</h4>
+             <p class="text-[#888] text-lg leading-relaxed mt-auto">透過阻力與轉速變化，享受大汗淋漓的騎乘快感，零衝擊保護膝關節。</p>
+           </div>
+        </div>
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col">
+           <div class="relative h-56 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/wyKGIWWxL1.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-110 opacity-60 filter contrast-125">
+             <div class="absolute top-5 right-5 bg-[#000]/80 backdrop-blur px-3 py-1 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">高強度</div>
+           </div>
+           <div class="p-8 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-xl font-black text-white mb-3 flex items-center gap-2 tracking-wide"><i data-lucide="zap" class="w-5 h-5 text-[#E6C280]"></i> 拳擊有氧 (Combat)</h4>
+             <p class="text-[#888] text-base leading-relaxed mt-auto">結合武術與拳擊動作，釋放壓力同時雕塑全身線條。</p>
+           </div>
+        </div>
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col">
+           <div class="relative h-56 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/jC7G0EAmqY.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-110 opacity-60 filter contrast-125">
+             <div class="absolute top-5 right-5 bg-[#000]/80 backdrop-blur px-3 py-1 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">基礎入門</div>
+           </div>
+           <div class="p-8 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-xl font-black text-white mb-3 flex items-center gap-2 tracking-wide"><i data-lucide="music" class="w-5 h-5 text-[#E6C280]"></i> 流行舞蹈 (Dance)</h4>
+             <p class="text-[#888] text-base leading-relaxed mt-auto">隨著流行節拍舞動，培養協調性，讓燃脂過程充滿樂趣。</p>
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 肌力與雕塑類 -->
+    <div class="relative flex flex-col lg:flex-row gap-12 lg:gap-20 mb-32 lg:items-start scroll-reveal">
+      <div class="lg:w-1/3 lg:sticky lg:top-32 reveal-element">
+        <div class="inline-flex items-center justify-center p-5 border border-[#333] rounded-[1.5rem] bg-[#111] shadow-xl mb-8">
+          <i data-lucide="dumbbell" class="w-10 h-10 text-[#E6C280]"></i>
+        </div>
+        <h3 class="text-4xl font-black text-white mb-3 tracking-wide">肌力與雕塑類</h3>
+        <span class="text-metallic-gold font-bold tracking-widest text-sm uppercase block mb-6">Strength & Sculpting</span>
+        <p class="text-[#888] text-lg leading-relaxed mb-8 text-justify">使用輕量器材（如啞鈴、壺鈴）或自身體重，針對全身或局部肌群進行反覆刺激，增加肌肉量並緊實身體線條。</p>
+        <div class="flex flex-wrap gap-3 mb-8">
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#緊實線條</span>
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#基礎代謝</span>
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#力量建立</span>
+        </div>
+      </div>
+
+      <div class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8 reveal-element delay-100">
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col">
+           <div class="relative h-56 overflow-hidden bg-[#050505]">
+             <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover transition duration-1000 group-hover:scale-110 opacity-60 filter contrast-125">
+             <div class="absolute top-5 right-5 bg-[#000]/80 backdrop-blur px-3 py-1 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">高強度</div>
+           </div>
+           <div class="p-8 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-xl font-black text-white mb-3 flex items-center gap-2 tracking-wide"><i data-lucide="target" class="w-5 h-5 text-[#E6C280]"></i> 槓鈴有氧 (BodyPump)</h4>
+             <p class="text-[#888] text-base leading-relaxed mt-auto">搭配輕重量槓鈴，進行高次數的全身性肌耐力訓練。</p>
+           </div>
+        </div>
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col">
+           <div class="relative h-56 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/bngTdi7AEc.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-110 opacity-60 filter contrast-125">
+             <div class="absolute top-5 right-5 bg-[#000]/80 backdrop-blur px-3 py-1 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">核心基礎</div>
+           </div>
+           <div class="p-8 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-xl font-black text-white mb-3 flex items-center gap-2 tracking-wide"><i data-lucide="aperture" class="w-5 h-5 text-[#E6C280]"></i> 核心強化 (Core)</h4>
+             <p class="text-[#888] text-base leading-relaxed mt-auto">專注於腹部、下背與骨盆底肌群，打造穩定強大的核心。</p>
+           </div>
+        </div>
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col sm:col-span-2">
+           <div class="relative h-64 md:h-80 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/eOAeiNiHga.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-105 opacity-60 filter contrast-125">
+             <div class="absolute top-6 right-6 bg-[#000]/80 backdrop-blur-md px-4 py-1.5 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">中高強度</div>
+           </div>
+           <div class="p-8 md:p-10 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-2xl font-black text-white mb-4 flex items-center gap-3 tracking-wide"><i data-lucide="anchor" class="w-6 h-6 text-[#E6C280]"></i> 懸吊訓練 (TRX)</h4>
+             <p class="text-[#888] text-lg leading-relaxed mt-auto">利用自身體重作為阻力，強迫核心全程參與，同時增進全身力量與平衡感。</p>
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 身心靈與舒緩 -->
+    <div class="relative flex flex-col lg:flex-row gap-12 lg:gap-20 mb-32 lg:items-start scroll-reveal">
+      <div class="lg:w-1/3 lg:sticky lg:top-32 reveal-element">
+        <div class="inline-flex items-center justify-center p-5 border border-[#333] rounded-[1.5rem] bg-[#111] shadow-xl mb-8">
+          <i data-lucide="flower-2" class="w-10 h-10 text-[#E6C280]"></i>
+        </div>
+        <h3 class="text-4xl font-black text-white mb-3 tracking-wide">身心靈與舒緩</h3>
+        <span class="text-metallic-gold font-bold tracking-widest text-sm uppercase block mb-6">Mind, Body & Flex</span>
+        <p class="text-[#888] text-lg leading-relaxed mb-8 text-justify">在和緩的節奏中，專注於呼吸控制與肌肉伸展，幫助釋放日常壓力、放鬆緊繃肌肉，並提升身體柔軟度。</p>
+        <div class="flex flex-wrap gap-3 mb-8">
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#柔軟度提升</span>
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#深層放鬆</span>
+        </div>
+      </div>
+
+      <div class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8 reveal-element delay-100">
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col sm:col-span-2">
+           <div class="relative h-64 md:h-80 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/V9y1TqpHht.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-105 opacity-60 filter contrast-125">
+             <div class="absolute top-6 right-6 bg-[#000]/80 backdrop-blur-md px-4 py-1.5 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">基礎入門</div>
+           </div>
+           <div class="p-8 md:p-10 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-2xl font-black text-white mb-4 flex items-center gap-3 tracking-wide"><i data-lucide="wind" class="w-6 h-6 text-[#E6C280]"></i> 基礎瑜珈 (Hatha Yoga)</h4>
+             <p class="text-[#888] text-lg leading-relaxed mt-auto">著重於基本體位法與呼吸控制，溫和拉伸，非常適合瑜珈初學者找回內平靜。</p>
+           </div>
+        </div>
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col">
+           <div class="relative h-56 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/jhs6zciTKa.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-110 opacity-60 filter contrast-125">
+             <div class="absolute top-5 right-5 bg-[#000]/80 backdrop-blur px-3 py-1 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">物理修復</div>
+           </div>
+           <div class="p-8 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-xl font-black text-white mb-3 flex items-center gap-2 tracking-wide"><i data-lucide="activity-square" class="w-5 h-5 text-[#E6C280]"></i> 筋膜放鬆 (Stretching)</h4>
+             <p class="text-[#888] text-base leading-relaxed mt-auto">使用滾筒與輔具，深層放鬆激痛點，幫助沾黏的肌肉恢復彈性。</p>
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 高強度與爆發力 -->
+    <div class="relative flex flex-col lg:flex-row gap-12 lg:gap-20 mb-32 lg:items-start scroll-reveal">
+      <div class="lg:w-1/3 lg:sticky lg:top-32 reveal-element">
+        <div class="inline-flex items-center justify-center p-5 border border-[#333] rounded-[1.5rem] bg-[#111] shadow-xl mb-8">
+          <i data-lucide="zap" class="w-10 h-10 text-[#E6C280]"></i>
+        </div>
+        <h3 class="text-4xl font-black text-white mb-3 tracking-wide">高強度與爆發力</h3>
+        <span class="text-metallic-gold font-bold tracking-widest text-sm uppercase block mb-6">HIIT & Performance</span>
+        <p class="text-[#888] text-lg leading-relaxed mb-8 text-justify">挑戰體能極限！透過短時間高強度的爆發性運動與短暫休息交替，在極短時間內達到最大訓練效益，並產生強大的後燃效應。</p>
+        <div class="flex flex-wrap gap-3 mb-8">
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#突破極限</span>
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#後燃效應</span>
+        </div>
+      </div>
+
+      <div class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8 reveal-element delay-100">
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col">
+           <div class="relative h-56 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/eyQeKgRsL8.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-110 opacity-60 filter contrast-125 grayscale-[30%]">
+             <div class="absolute top-5 right-5 bg-[#000]/80 backdrop-blur px-3 py-1 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">極限挑戰</div>
+           </div>
+           <div class="p-8 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-xl font-black text-white mb-3 flex items-center gap-2 tracking-wide"><i data-lucide="timer" class="w-5 h-5 text-[#E6C280]"></i> 高強度間歇 (HIIT)</h4>
+             <p class="text-[#888] text-base leading-relaxed mt-auto">結合多種複合性動作，將心跳率推向極限，短時間榨乾體能。</p>
+           </div>
+        </div>
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col">
+           <div class="relative h-56 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/ZeEfqltd9A.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-110 opacity-60 filter contrast-125 grayscale-[30%]">
+             <div class="absolute top-5 right-5 bg-[#000]/80 backdrop-blur px-3 py-1 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">綜合體能</div>
+           </div>
+           <div class="p-8 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-xl font-black text-white mb-3 flex items-center gap-2 tracking-wide"><i data-lucide="refresh-cw" class="w-5 h-5 text-[#E6C280]"></i> 循環訓練 (Circuit)</h4>
+             <p class="text-[#888] text-base leading-relaxed mt-auto">設置戰繩、跳箱等多個關卡，輪流操作挑戰全身綜合體能與爆發力。</p>
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 全齡健體課程 -->
+    <div class="relative flex flex-col lg:flex-row gap-12 lg:gap-20 mb-10 lg:items-start scroll-reveal">
+      <div class="lg:w-1/3 lg:sticky lg:top-32 reveal-element">
+        <div class="inline-flex items-center justify-center p-5 border border-[#333] rounded-[1.5rem] bg-[#111] shadow-xl mb-8">
+          <i data-lucide="users" class="w-10 h-10 text-[#E6C280]"></i>
+        </div>
+        <h3 class="text-4xl font-black text-white mb-3 tracking-wide">全齡健體課程</h3>
+        <span class="text-metallic-gold font-bold tracking-widest text-sm uppercase block mb-6">Fitness for All</span>
+        <p class="text-[#888] text-lg leading-relaxed mb-8 text-justify">針對特定族群與特殊需求量身打造的專屬課程，提供更安全、更有針對性的專業指導。</p>
+        <div class="flex flex-wrap gap-3 mb-8">
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#分眾設計</span>
+          <span class="bg-[#1A1A1A] text-[#E6C280] px-4 py-1.5 rounded-full text-sm font-bold border border-[#333]">#安全防護</span>
+        </div>
+      </div>
+
+      <div class="lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-8 reveal-element delay-100">
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col sm:col-span-2">
+           <div class="relative h-64 md:h-80 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/S2t65XysdZ.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-105 opacity-60 filter contrast-125">
+             <div class="absolute top-6 right-6 bg-[#000]/80 backdrop-blur-md px-4 py-1.5 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">長青護理</div>
+           </div>
+           <div class="p-8 md:p-10 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-2xl font-black text-white mb-4 flex items-center gap-3 tracking-wide"><i data-lucide="shield-plus" class="w-6 h-6 text-[#E6C280]"></i> 樂齡體適能</h4>
+             <p class="text-[#888] text-lg leading-relaxed mt-auto">針對銀髮族設計，著重關節活動度與預防跌倒的基礎肌力訓練，找回日常自主力。</p>
+           </div>
+        </div>
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col">
+           <div class="relative h-56 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/rI0j49Kv6V.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-110 opacity-60 filter contrast-125">
+             <div class="absolute top-5 right-5 bg-[#000]/80 backdrop-blur px-3 py-1 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">溫和安全</div>
+           </div>
+           <div class="p-8 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-xl font-black text-white mb-3 flex items-center gap-2 tracking-wide"><i data-lucide="baby" class="w-5 h-5 text-[#E6C280]"></i> 孕產婦專屬訓練</h4>
+             <p class="text-[#888] text-base leading-relaxed mt-auto">專為孕期與產後媽媽設計，幫助安全維持體能與產後核心恢復。</p>
+           </div>
+        </div>
+        <div class="bg-[#111] rounded-[2rem] overflow-hidden shadow-2xl border border-[#222] group hover-glow-card flex flex-col">
+           <div class="relative h-56 overflow-hidden bg-[#050505]">
+             <img src="https://yourimageshare.com/ib/hrS6ZRjdoa.png" class="w-full h-full object-cover transition duration-1000 group-hover:scale-110 opacity-60 filter contrast-125">
+             <div class="absolute top-5 right-5 bg-[#000]/80 backdrop-blur px-3 py-1 rounded-full text-xs tracking-widest font-bold text-[#E6C280] border border-[#333]">發展培育</div>
+           </div>
+           <div class="p-8 flex flex-col flex-grow bg-gradient-to-b from-[#1A1A1A] to-[#111]">
+             <h4 class="text-xl font-black text-white mb-3 flex items-center gap-2 tracking-wide"><i data-lucide="rocket" class="w-5 h-5 text-[#E6C280]"></i> 青少年體適能開發</h4>
+             <p class="text-[#888] text-base leading-relaxed mt-auto">針對發育中兒童與青少年，強化身體協調性與基礎敏捷度。</p>
+           </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="contact" class="page-section page-enter py-20 md:py-32 bg-[#050505]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 stagger-item delay-100">
+      <h2 class="text-xs md:text-sm font-bold tracking-[0.3em] text-[#E6C280] uppercase mb-4">Contact Us</h2>
+      <h1 class="text-4xl md:text-6xl font-black text-white premium-title-anim tracking-wider">聯絡我們</h1>
+      <div class="w-16 h-1 bg-gradient-to-r from-[#E6C280] to-[#B38540] mx-auto mt-8 rounded-full"></div>
+      <p class="mt-8 text-[#888] max-w-2xl mx-auto text-lg text-center font-medium">
+        無論是預約參觀、企業合作洽詢或有任何疑問，都歡迎隨時與我們聯繫。
+      </p>
+    </div>
+
+    <div class="bg-[#0A0A0A] rounded-[3rem] shadow-2xl border border-[#222] overflow-hidden flex flex-col lg:flex-row stagger-item delay-200">
+      
+      <div class="lg:w-2/5 bg-gradient-to-br from-[#111] to-[#0A0A0A] p-12 md:p-16 relative overflow-hidden border-r border-[#222]">
+        <div class="absolute top-0 right-0 -mr-10 -mt-10 opacity-[0.03] pointer-events-none">
+          <i data-lucide="map-pin" class="w-80 h-80 text-[#E6C280]"></i>
+        </div>
+        <div class="relative z-10 h-full flex flex-col justify-center">
+          <h3 class="text-3xl font-black text-white mb-10 tracking-widest">聯絡資訊</h3>
+          
+          <ul class="space-y-10 flex-grow">
+            <li class="flex items-start">
+              <div class="bg-[#1A1A1A] p-3 rounded-2xl shadow-sm mr-5 border border-[#333]">
+                <i data-lucide="map-pin" class="w-6 h-6 text-[#E6C280] flex-shrink-0"></i>
+              </div>
+              <div>
+                <h4 class="text-white font-bold text-xl mb-2 tracking-wide">場館地址</h4>
+                <p class="text-[#888] leading-relaxed text-lg">台中市北屯區(籌備中即將公開)</p>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="bg-[#1A1A1A] p-3 rounded-2xl shadow-sm mr-5 border border-[#333]">
+                <i data-lucide="message-square" class="w-6 h-6 text-[#E6C280] flex-shrink-0"></i>
+              </div>
+              <div>
+                <h4 class="text-white font-bold text-xl mb-2 tracking-wide">官方 LINE 客服</h4>
+                <p class="text-[#888] leading-relaxed mb-2 text-lg">最即時的專人線上回覆</p>
+              </div>
+            </li>
+            <li class="flex items-start">
+              <div class="bg-[#1A1A1A] p-3 rounded-2xl shadow-sm mr-5 border border-[#333]">
+                <i data-lucide="mail" class="w-6 h-6 text-[#E6C280] flex-shrink-0"></i>
+              </div>
+              <div>
+                <h4 class="text-white font-bold text-xl mb-2 tracking-wide">電子信箱</h4>
+                <a href="mailto:XXXXX@gmail.com" class="text-[#888] hover:text-[#E6C280] transition-colors font-medium text-lg">XXXXX@gmail.com</a>
+              </div>
+            </li>
+          </ul>
+
+          <div class="pt-10 mt-10 border-t border-[#222]">
+            <h4 class="text-[#666] text-xs mb-5 tracking-[0.2em] font-bold uppercase">Follow Us</h4>
+            <div class="flex space-x-4">
+              <a href="https://www.facebook.com/share/1Ai8FBmS6P/?mibextid=wwXIfr" target="_blank" rel="noreferrer" class="bg-[#1A1A1A] p-4 rounded-full text-[#E6C280] hover:bg-[#E6C280] hover:text-[#000] transition-all transform hover:-translate-y-1 shadow-lg border border-[#333]">
+                <i data-lucide="facebook" class="w-5 h-5"></i>
+              </a>
+              <a href="https://www.instagram.com/leeyu04gym?igsh=Nzlzc3FtNXE2eHoz" target="_blank" rel="noreferrer" class="bg-[#1A1A1A] p-4 rounded-full text-[#E6C280] hover:bg-[#E6C280] hover:text-[#000] transition-all transform hover:-translate-y-1 shadow-lg border border-[#333]">
+                <i data-lucide="instagram" class="w-5 h-5"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:w-3/5 p-12 md:p-16 relative bg-[#0A0A0A]">
+        <div id="contact-success" class="hidden text-center py-16 animate-fadeIn absolute inset-0 bg-[#0A0A0A] z-20 flex flex-col items-center justify-center">
+          <div class="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-[#111] mb-8 border border-[#B38540] shadow-[0_0_30px_rgba(230,194,128,0.15)]">
+            <i data-lucide="check-circle" class="w-12 h-12 text-[#E6C280]"></i>
+          </div>
+          <h3 class="text-3xl font-black text-white mb-4 tracking-widest">訊息已送出！</h3>
+          <p class="text-[#888] text-center font-medium text-lg">感謝您的聯繫，我們將於 1-2 個工作日內由專人回覆您。</p>
+          <button onclick="resetContactForm()" class="mt-10 text-[#E6C280] hover:text-white transition-colors border-b border-[#E6C280] pb-1 tracking-widest font-bold">返回重新填寫</button>
+        </div>
+
+        <div id="contact-form-container">
+          <h3 class="text-3xl font-black text-white mb-3 tracking-wide">線上留言</h3>
+          <p class="text-[#888] mb-10 text-base font-medium">請填寫以下表單，我們將盡快為您服務。</p>
+          
+          <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-xs font-bold text-[#666] mb-2 tracking-widest uppercase">姓名 / 公司名稱 <span class="text-[#E6C280]">*</span></label>
+                <input required type="text" class="w-full px-5 py-4 bg-[#111] text-white rounded-xl border border-[#222] focus:bg-[#1A1A1A] focus:border-[#E6C280] outline-none transition-all shadow-inner" placeholder="您的姓名" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-[#666] mb-2 tracking-widest uppercase">聯絡電話 <span class="text-[#E6C280]">*</span></label>
+                <input required type="tel" class="w-full px-5 py-4 bg-[#111] text-white rounded-xl border border-[#222] focus:bg-[#1A1A1A] focus:border-[#E6C280] outline-none transition-all shadow-inner" placeholder="09xx-xxx-xxx" />
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-xs font-bold text-[#666] mb-2 tracking-widest uppercase">電子信箱 <span class="text-[#E6C280]">*</span></label>
+                <input required type="email" class="w-full px-5 py-4 bg-[#111] text-white rounded-xl border border-[#222] focus:bg-[#1A1A1A] focus:border-[#E6C280] outline-none transition-all shadow-inner" placeholder="example@mail.com" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-[#666] mb-2 tracking-widest uppercase">LINE ID <span class="text-[#444] text-[10px] ml-1 font-normal">(非必填)</span></label>
+                <input type="text" class="w-full px-5 py-4 bg-[#111] text-white rounded-xl border border-[#222] focus:bg-[#1A1A1A] focus:border-[#E6C280] outline-none transition-all shadow-inner" placeholder="您的 LINE ID" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-[#666] mb-2 tracking-widest uppercase">諮詢項目 <span class="text-[#E6C280]">*</span></label>
+              <select required class="w-full px-5 py-4 bg-[#111] text-white rounded-xl border border-[#222] focus:bg-[#1A1A1A] focus:border-[#E6C280] outline-none transition-all shadow-inner font-medium appearance-none">
+                <option value="" disabled selected>請選擇項目</option>
+                <option value="會籍詢問">會籍與預售詢問</option>
+                <option value="企業合作">企業/社區健康合作</option>
+                <option value="私人教練">一對一私人教練</option>
+                <option value="其他問題">其他問題</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-[#666] mb-2 tracking-widest uppercase">詳細內容 <span class="text-[#E6C280]">*</span></label>
+              <textarea required rows="5" class="w-full px-5 py-4 bg-[#111] text-white rounded-xl border border-[#222] focus:bg-[#1A1A1A] focus:border-[#E6C280] outline-none transition-all resize-none shadow-inner" placeholder="請描述您的需求或問題..."></textarea>
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-[#DFB973] to-[#A87B38] text-[#000] font-black tracking-widest py-5 rounded-xl shadow-[0_5px_20px_rgba(230,194,128,0.2)] hover:shadow-[0_5px_25px_rgba(230,194,128,0.4)] transition-all mt-4 text-lg transform hover:-translate-y-1">
+              確認送出
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="presale" class="page-section page-enter relative min-h-screen flex flex-col bg-[#000]">
+  
+  <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+    <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=1920&auto=format&fit=crop" alt="體超 SUPER HUMAN 視覺底圖" class="w-full h-full object-cover object-center animate-bg-zoom opacity-[0.35]" />
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.4)_0%,rgba(0,0,0,0.95)_100%)] z-10"></div>
+    <div class="absolute inset-0 bg-noise z-[11]"></div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full my-auto pt-24 pb-20 md:pt-32 md:pb-24">
+    <div class="text-center mb-12 stagger-item delay-100">
+      <h1 class="text-4xl md:text-6xl font-black text-white mb-6 premium-title-anim drop-shadow-2xl tracking-widest">搶先預售登記中</h1>
+      <p class="text-lg md:text-xl text-[#A1A1AA] mb-12 text-center mx-auto font-medium tracking-wide">立即登記，專員將為您保留首波獨家資格！</p>
+    </div>
+
+    <div class="relative group stagger-item delay-300 max-w-2xl mx-auto">
+      
+      <div class="absolute -inset-1 bg-gradient-to-r from-[#DFB973] via-[#C89F5D] to-[#A87B38] rounded-[2.5rem] blur-xl opacity-50 group-hover:opacity-80 transition duration-1000 animate-pulse"></div>
+
+      <div class="bg-[#0A0A0A] rounded-[2.5rem] p-10 md:p-16 shadow-2xl relative overflow-hidden z-10 border border-[#222]">
+        
+        <div id="presale-success" class="hidden text-center py-10 animate-fadeIn absolute inset-0 bg-[#0A0A0A] z-20 flex flex-col justify-center items-center">
+          <div class="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-[#111] mb-8 border border-[#B38540] shadow-[0_0_30px_rgba(230,194,128,0.15)]">
+            <i data-lucide="check-circle" class="w-12 h-12 text-[#E6C280]"></i>
+          </div>
+          <h3 class="text-3xl font-black text-white mb-4 tracking-widest">登記成功！</h3>
+          <p class="text-[#A1A1AA] text-center max-w-sm px-4 font-medium text-lg leading-relaxed">我們已收到您的資料，專員將會盡快與您聯繫確認優惠資格。</p>
+          <button onclick="resetPresaleForm()" class="mt-10 text-[#E6C280] hover:text-white transition-colors border-b border-[#E6C280] pb-1 tracking-widest font-bold">返回重新填寫</button>
+        </div>
+
+        <div id="presale-form-container">
+          <form id="presale-form" onsubmit="handlePresaleSubmit(event)" class="space-y-8">
+            <div>
+              <label class="block text-xs font-bold text-[#666] mb-3 tracking-widest uppercase">登記稱呼 <span class="text-red-500">*</span></label>
+              <input type="text" required class="w-full px-5 py-4 bg-[#111] text-white rounded-xl border border-[#222] focus:bg-[#1A1A1A] focus:border-[#E6C280] outline-none transition-colors shadow-inner" placeholder="請輸入您的姓名或稱呼" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-[#666] mb-3 tracking-widest uppercase">聯絡手機 <span class="text-red-500">*</span></label>
+              <input type="tel" required class="w-full px-5 py-4 bg-[#111] text-white rounded-xl border border-[#222] focus:bg-[#1A1A1A] focus:border-[#E6C280] outline-none transition-colors shadow-inner" placeholder="0912-345-678" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-[#666] mb-3 tracking-widest uppercase">LINE ID <span class="text-[#444] text-[10px] ml-1 font-normal">(非必填)</span></label>
+              <input type="text" class="w-full px-5 py-4 bg-[#111] text-white rounded-xl border border-[#222] focus:bg-[#1A1A1A] focus:border-[#E6C280] outline-none transition-colors shadow-inner" placeholder="輸入 LINE ID 方便我們與您聯繫" />
+            </div>
+            <button type="submit" class="w-full neon-btn-wrapper transition-all transform hover:-translate-y-1 mt-8">
+              <span class="neon-btn-inner px-8 py-5 text-xl font-black text-[#0F0F0F] block w-full text-center tracking-widest">
+                搶先登記保留優惠
+              </span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="bg-[#050505] text-[#888] py-16 md:py-20 border-t-[4px] border-[#B38540]">
+<div class="max-w-7xl mx-auto px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 mb-16 max-w-5xl mx-auto">
+
+<div class="flex flex-col items-center md:items-start text-center md:text-left">
+<h3 class="text-white text-3xl font-black tracking-widest mb-4">體超 <span class="text-metallic-gold">SUPER HUMAN</span></h3>
+<p class="text-[#666] mb-8 leading-relaxed font-medium tracking-wide">
+歡迎加入我們的社群，掌握最新消息！
+</p>
+<div class="flex justify-center md:justify-start space-x-5">
+<a href="https://www.facebook.com/share/1Ai8FBmS6P/?mibextid=wwXIfr" target="_blank" rel="noreferrer" class="bg-[#111] p-4 rounded-full text-[#E6C280] hover:bg-[#E6C280] hover:text-[#000] transition-all duration-500 transform hover:-translate-y-2 border border-[#222] shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+<i data-lucide="facebook" class="w-5 h-5"></i>
+</a>
+<a href="https://www.instagram.com/leeyu04gym?igsh=Nzlzc3FtNXE2eHoz" target="_blank" rel="noreferrer" class="bg-[#111] p-4 rounded-full text-[#E6C280] hover:bg-[#E6C280] hover:text-[#000] transition-all duration-500 transform hover:-translate-y-2 border border-[#222] shadow-[0_5px_15px_rgba(0,0,0,0.5)]">
+<i data-lucide="instagram" class="w-5 h-5"></i>
+</a>
+</div>
+</div>
+
+<div class="flex flex-col items-center md:items-start">
+<h3 class="text-white text-sm font-black mb-8 tracking-[0.2em] uppercase relative inline-block">
+快速導覽
+</h3>
+<ul class="grid grid-cols-2 gap-y-5 gap-x-10 text-base font-bold text-center md:text-left">
+  <li><button onclick="navigateTo('home')" class="hover:text-[#E6C280] transition-colors">首頁</button></li>
+  <li><button onclick="navigateTo('about')" class="hover:text-[#E6C280] transition-colors">關於體超</button></li>
+  <li><button onclick="navigateTo('facilities')" class="hover:text-[#E6C280] transition-colors">場館介紹</button></li>
+  <li><button onclick="navigateTo('courses')" class="hover:text-[#E6C280] transition-colors">專業課程</button></li>
+  <li class="col-span-2 md:col-span-1"><button onclick="navigateTo('contact')" class="hover:text-[#E6C280] transition-colors">聯絡我們</button></li>
+</ul>
+</div>
+
+</div>
+
+<div class="border-t border-[#222] w-full pt-10 flex flex-col md:flex-row justify-between items-center text-xs gap-6 font-bold text-[#555] uppercase tracking-widest">
+<p class="text-center md:text-left">&copy; <span id="current-year"></span> 體超 SUPER HUMAN. All rights reserved.</p>
+<p class="text-[#E6C280]/60 text-center md:text-right">Building a healthier life together.</p>
+</div>
+</div>
+</footer>
+
+<script>
+// 初始化 Lucide Icons
+lucide.createIcons();
+document.getElementById('current-year').innerText = new Date().getFullYear();
+
+// --- 🌟 頂級畫冊滾動浮現動畫 (Scroll Reveal) ---
+function initScrollReveal() {
+  const revealElements = document.querySelectorAll('.reveal-element');
+  
+  if (!('IntersectionObserver' in window)) {
+    revealElements.forEach(el => el.classList.add('is-revealed'));
+    return;
+  }
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -15% 0px', 
+    threshold: 0.1
+  };
+
+  const revealObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  revealElements.forEach(el => revealObserver.observe(el));
+}
+
+// --- 載入遮罩邏輯 ---
+window.addEventListener('load', () => {
+  initScrollReveal(); 
+});
+
+// --- 跳轉至企業合作區塊 (首頁專用) ---
+function scrollToCorporate() {
+  navigateTo('home');
+  setTimeout(() => {
+    const target = document.getElementById('corporate-services');
+    if (target) {
+      const headerOffset = 100; 
+      const elementPosition = target.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    }
+  }, 400); 
+}
+
+// --- 頁面導航邏輯與【外框狀態】更新 ---
+function navigateTo(pageId) {
+  const currentSection = document.querySelector('.page-section.active');
+  const targetSection = document.getElementById(pageId);
+
+  if (!targetSection) {
+    console.warn('Page section not found:', pageId);
+    return;
+  }
+
+  if (currentSection && currentSection.id === pageId) {
+    closeMobileMenu();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  if (currentSection) {
+    currentSection.classList.remove('page-enter');
+    currentSection.classList.add('page-exit');
+    setTimeout(() => {
+      currentSection.classList.remove('active', 'page-exit');
+      showNewPage(targetSection, pageId);
+    }, 400);
+  } else {
+    showNewPage(targetSection, pageId);
+  }
+}
+
+function showNewPage(targetSection, pageId) {
+  targetSection.classList.add('active');
+  void targetSection.offsetWidth;
+  targetSection.classList.add('page-enter');
+
+  if(pageId === 'about' || pageId === 'facilities' || pageId === 'courses') {
+    setTimeout(() => { initScrollReveal(); }, 500);
+  }
+
+  let activeNavId = pageId;
+
+  // Desktop Nav Update 
+  document.querySelectorAll('#desktop-menu .nav-btn').forEach(btn => {
+    btn.className = 'nav-btn px-5 py-2 text-sm lg:text-base font-bold transition-all duration-300 text-[#888888] hover:text-[#E6C280] border border-transparent rounded-full hover:bg-white/5';
+    
+    if(btn.dataset.target === activeNavId) {
+      if(activeNavId === 'presale') {
+        btn.className = 'nav-btn text-sm lg:text-base font-bold transition-all duration-500 bg-gradient-to-r from-[#DFB973] to-[#A87B38] text-[#000] px-6 py-2.5 rounded-full shadow-[0_0_25px_rgba(230,194,128,0.4)] hover:scale-105 ml-4';
+      } else {
+        btn.className = 'nav-btn px-5 py-2 text-sm lg:text-base font-bold transition-all duration-300 text-[#E6C280] border border-[#B38540]/50 bg-[#B38540]/10 rounded-full';
+      }
+    } else if (btn.dataset.target === 'presale') {
+      btn.className = 'nav-btn text-sm lg:text-base font-bold transition-all duration-500 bg-gradient-to-r from-[#DFB973] to-[#A87B38] text-[#000] px-6 py-2.5 rounded-full shadow-[0_0_20px_rgba(230,194,128,0.15)] hover:shadow-[0_0_25px_rgba(230,194,128,0.4)] hover:scale-105 ml-4';
+    }
+  });
+
+  // Mobile Nav Update
+  document.querySelectorAll('#mobile-menu .nav-btn-mobile').forEach(btn => {
+    if(btn.dataset.target === activeNavId) {
+      btn.className = 'nav-btn-mobile block w-full text-center px-4 py-4 rounded-xl text-lg font-bold bg-[#111] text-[#E6C280] transition-colors border border-[#B38540]/50';
+      if(activeNavId === 'presale'){
+         btn.className = 'nav-btn-mobile block w-full text-center px-4 py-5 rounded-xl text-xl font-bold bg-gradient-to-r from-[#DFB973] to-[#A87B38] text-[#000] shadow-[0_0_30px_rgba(230,194,128,0.4)] border border-transparent';
+      }
+    } else {
+      btn.className = 'nav-btn-mobile block w-full text-center px-4 py-4 rounded-xl text-lg font-bold text-[#888888] hover:bg-[#111] hover:text-[#E6C280] transition-colors border border-transparent';
+      if (btn.dataset.target === 'presale') {
+        btn.className = 'nav-btn-mobile block w-full text-center px-4 py-5 rounded-xl text-xl font-bold bg-gradient-to-r from-[#DFB973] to-[#A87B38] text-[#000] shadow-[0_0_20px_rgba(230,194,128,0.2)] border border-transparent';
+      }
+    }
+  });
+
+  closeMobileMenu();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// --- 手機版選單切換 ---
+let isMenuOpen = false;
+function toggleMobileMenu() {
+isMenuOpen = !isMenuOpen;
+const menu = document.getElementById('mobile-menu');
+const iconOpen = document.getElementById('menu-icon-open');
+const iconClose = document.getElementById('menu-icon-close');
+
+if (isMenuOpen) {
+menu.classList.remove('hidden');
+iconOpen.classList.add('hidden');
+iconClose.classList.remove('hidden');
+} else {
+menu.classList.add('hidden');
+iconOpen.classList.remove('hidden');
+iconClose.classList.add('hidden');
+}
+}
+
+function closeMobileMenu() {
+isMenuOpen = false;
+document.getElementById('mobile-menu').classList.add('hidden');
+document.getElementById('menu-icon-open').classList.remove('hidden');
+document.getElementById('menu-icon-close').classList.add('hidden');
+}
+
+function handleCorpSubmit(e) {
+  e.preventDefault();
+  setTimeout(() => {
+    document.getElementById('corp-form-container').classList.add('hidden');
+    document.getElementById('corp-success').classList.remove('hidden');
+    document.getElementById('corp-form').reset();
+  }, 600);
+}
+function resetCorpForm() {
+  document.getElementById('corp-success').classList.add('hidden');
+  document.getElementById('corp-form-container').classList.remove('hidden');
+}
+
+function handleContactSubmit(e) {
+  e.preventDefault();
+  setTimeout(() => {
+    document.getElementById('contact-form-container').classList.add('hidden');
+    document.getElementById('contact-success').classList.remove('hidden');
+    document.getElementById('contact-form').reset();
+  }, 600);
+}
+function resetContactForm() {
+  document.getElementById('contact-success').classList.add('hidden');
+  document.getElementById('contact-form-container').classList.remove('hidden');
+}
+
+function handlePresaleSubmit(e) {
+  e.preventDefault();
+  setTimeout(() => {
+    document.getElementById('presale-form-container').classList.add('hidden');
+    document.getElementById('presale-success').classList.remove('hidden');
+    document.getElementById('presale-form').reset();
+  }, 600);
+}
+function resetPresaleForm() {
+  document.getElementById('presale-success').classList.add('hidden');
+  document.getElementById('presale-form-container').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
